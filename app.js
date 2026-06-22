@@ -1,4 +1,6 @@
 (function() {
+  const grid = document.getElementById('grid');
+  const live = document.getElementById('live');
   const byNum = new Map(ELEMENTS.map(e=>[e.number,e]));
   const bySym = new Map(ELEMENTS.map(e=>[e.symbol.toUpperCase(),e]));
   const byPos = new Map();
