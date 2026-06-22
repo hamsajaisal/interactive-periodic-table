@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive Periodic Table — Accessible Classroom Edition</title>
+<link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Inter:wght@400;500;600;700&display=swap">
+</head>
+<body>
+<a class="skip-link" href="#ptable">Skip to periodic table</a>
+
+<header class="app-head">
+  <p class="eyebrow">Classroom Edition · Built for screen readers and keyboards</p>
+  <h1>The Interactive Periodic Table</h1>
+  <p class="tagline">Explore all 118 elements by arrow key, search, or touch. Every element announces its full identity as you move, and a detailed card is one keystroke away.</p>
+</header>
+
+<div class="toolbar">
+  <div class="search" role="search">
+    <label for="symbol-search">Find an element by symbol</label>
+    <div class="search-row">
+      <input id="symbol-search" type="text" autocomplete="off" spellcheck="false"
+        placeholder="e.g. H, Fe, Au" aria-describedby="search-hint" maxlength="3">
+      <button class="btn" id="search-go" type="button">Find</button>
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="filter-cat">Highlight a family</label>
+    <select id="filter-cat">
+      <option value="">Show all families</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="view-mode">Colour the table by</label>
+    <select id="view-mode">
+      <option value="category">Family (default)</option>
+      <option value="state">State at room temperature</option>
+    </select>
+  </div>
+
+  <p class="hint" id="search-hint">Press <kbd>Enter</kbd> to focus the element. Press <kbd>Shift</kbd>+<kbd>Enter</kbd> to open its full details.</p>
+</div>
+
+<details class="help">
+  <summary>Keyboard shortcuts &amp; how to explore</summary>
+  <div class="keys">
+    <div><kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd> — Move between elements in the grid</div>
+    <div><kbd>Home</kbd> / <kbd>End</kbd> — First / last element in the current period</div>
+    <div><kbd>Enter</kbd> or <kbd>Space</kbd> — Open the element's detail card</div>
+    <div><kbd>G</kbd> — Hear where you are: row, group and period</div>
+    <div><kbd>Shift</kbd>+<kbd>Enter</kbd> (in search) — Open details for a typed symbol</div>
+    <div>Double-click / double-tap an element — Open its detail card</div>
+    <div><kbd>Esc</kbd> — Close the detail card</div>
+  </div>
+  <p style="color:var(--muted);font-size:.88rem;margin:0 0 10px">
+    As you arrow across the table, your screen reader announces the element's name, symbol, atomic number,
+    group, period and category. At the edge of a period or group you'll hear a note that there are no more elements in that direction.
+    On a phone or tablet, use the round arrow buttons in the corner to move, and the centre button to hear your position.
+  </p>
+</details>
+
+<main id="ptable" class="table-scroll">
+  <div class="ptable" role="grid" aria-label="Periodic table of the elements, 118 elements arranged by group and period" id="grid"></div>
+</main>
+
+<section class="legend" aria-label="Colour key">
+  <h2 id="legend-title">Family colour key</h2>
+  <div id="legend-items" style="display:flex;flex-wrap:wrap;gap:8px 14px"></div>
+</section>
+
+<div id="live" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+<!-- touch direction pad -->
+<div class="dpad" role="group" aria-label="Move around the table">
+  <button class="up" type="button" data-dir="up" aria-label="Move up">▲</button>
+  <button class="left" type="button" data-dir="left" aria-label="Move left">◀</button>
+  <button class="info" type="button" data-dir="info" aria-label="Where am I">Where</button>
+  <button class="right" type="button" data-dir="right" aria-label="Move right">▶</button>
+  <button class="down" type="button" data-dir="down" aria-label="Move down">▼</button>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="dialog" id="dialog" role="dialog" aria-modal="true" aria-labelledby="dlg-name" tabindex="-1">
+    <div class="dialog-top" id="dlg-top">
+      <div class="big-sym" id="dlg-sym" aria-hidden="true"></div>
+      <div>
+        <h2 id="dlg-name"></h2>
+        <p class="catline" id="dlg-cat"></p>
+      </div>
+      <button class="close" id="dlg-close" type="button" aria-label="Close details">×</button>
+    </div>
+    <div class="dialog-body">
+      <div class="img-wrap" id="dlg-img"></div>
+      <ul class="stats" id="dlg-stats"></ul>
+      <div class="prose" id="dlg-prose"></div>
+    </div>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
