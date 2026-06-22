@@ -247,4 +247,3 @@
 
   setActive(1,{focus:false,announce:false});
 })();
-})();
