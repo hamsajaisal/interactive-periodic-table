@@ -15,9 +15,17 @@
     h.className='group-head'; h.setAttribute('role','presentation');
     h.textContent=c; h.style.gridColumn=c; frag.appendChild(h);
   }
+  function getBlock(el) {
+    if (el.number === 2) return 's';
+    if (el.group === 1 || el.group === 2) return 's';
+    if (el.category === 'lanthanide' || el.category === 'actinide') return 'f';
+    if (el.group >= 3 && el.group <= 12) return 'd';
+    if (el.group >= 13 && el.group <= 18) return 'p';
+    return 'unknown';
+  }
   function announceText(el){
     return el.name+'. Symbol '+spaced(el.symbol)+'. Atomic number '+el.number+
-           '. Group '+el.group+'. Period '+el.period+'. '+el.categoryLabel+'.';
+           '. Group '+el.group+'. Period '+el.period+'. Block '+getBlock(el)+'-block. '+el.categoryLabel+'.';
   }
   function spaced(s){ return s.split('').join(' '); }
   function makeCell(el){
@@ -80,7 +88,7 @@
   }
   function whereAmI(){
     const el=byNum.get(activeNum);
-    say(el.name+'. Row '+el.row+', group '+el.group+', period '+el.period+'.');
+    say(el.name+'. Row '+el.row+', group '+el.group+', period '+el.period+', block '+getBlock(el)+'-block.');
   }
 
   grid.addEventListener('keydown',ev=>{
@@ -228,7 +236,7 @@
     const shells = shellCounts(el.config);
     document.getElementById('dlg-stats').innerHTML=
       stat('Symbol',el.symbol)+stat('Atomic number',el.number)+stat('Atomic mass',el.mass+' u')+
-      stat('Group',el.group)+stat('Period',el.period)+stat('Category',el.categoryLabel)+
+      stat('Group',el.group)+stat('Period',el.period)+stat('Block',getBlock(el)+'-block')+stat('Category',el.categoryLabel)+
       stat('State at room temp.',el.phase)+stat('Electrons per shell',shells.join(', '))+stat('Electron configuration',el.config);
     document.getElementById('dlg-prose').innerHTML=
       '<h3>Discovery</h3><p>'+el.discovery+'</p>'+
