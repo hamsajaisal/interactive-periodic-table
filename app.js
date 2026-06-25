@@ -40,7 +40,7 @@
   marker('57–71',3,6); marker('89–103',3,7);
   function seriesLabel(t,row){const d=document.createElement('div');d.className='ln-row-label';
     d.setAttribute('role','presentation');d.style.gridRow=row+1;d.textContent=t;frag.appendChild(d);}
-  seriesLabel('Lanthanides',9); seriesLabel('Actinides',10);
+  seriesLabel('Lanthanoids',9); seriesLabel('Actinoids',10);
   grid.appendChild(frag);
 
   function say(msg){ live.textContent=''; requestAnimationFrame(()=>{live.textContent=msg;}); }
@@ -117,9 +117,22 @@
   input.addEventListener('keydown',ev=>{if(ev.key==='Enter'){ev.preventDefault();runSearch(ev.shiftKey);}});
   function runSearch(openPanel){
     const q=(input.value||'').trim().toUpperCase();
-    if(!q){say('Type an element symbol, then press Enter.');return;}
-    const el=bySym.get(q);
-    if(!el){say('No element found for symbol '+spaced(q)+'. Try a symbol such as H, Fe, or Au.');return;}
+    if(!q){say('Type a symbol, name, or atomic number, then press Enter.');return;}
+    
+    let el = null;
+    if (/^\d+$/.test(q)) {
+      el = byNum.get(Number(q));
+    } else {
+      el = bySym.get(q);
+      if (!el) {
+        el = ELEMENTS.find(e => e.name.toUpperCase() === q);
+      }
+      if (!el) {
+        el = ELEMENTS.find(e => e.name.toUpperCase().includes(q));
+      }
+    }
+    
+    if(!el){say('No element found for "'+q+'". Try a symbol like Fe, a name like Iron, or a number like 26.');return;}
     setActive(el.number,{focus:true});
     const c=cellOf(el.number); c.classList.add('flash'); setTimeout(()=>c.classList.remove('flash'),1100);
     if(openPanel) openDetail(el.number);
@@ -212,10 +225,11 @@
     document.getElementById('dlg-name').textContent=el.name;
     document.getElementById('dlg-cat').textContent=el.categoryLabel+' · Group '+el.group+' · Period '+el.period;
     document.getElementById('dlg-img').innerHTML=elementImageSVG(el);
+    const shells = shellCounts(el.config);
     document.getElementById('dlg-stats').innerHTML=
       stat('Symbol',el.symbol)+stat('Atomic number',el.number)+stat('Atomic mass',el.mass+' u')+
       stat('Group',el.group)+stat('Period',el.period)+stat('Category',el.categoryLabel)+
-      stat('State at room temp.',el.phase)+stat('Electron configuration',el.config);
+      stat('State at room temp.',el.phase)+stat('Electrons per shell',shells.join(', '))+stat('Electron configuration',el.config);
     document.getElementById('dlg-prose').innerHTML=
       '<h3>Discovery</h3><p>'+el.discovery+'</p>'+
       '<h3>What it is used for</h3><p>'+el.uses+'</p>'+
